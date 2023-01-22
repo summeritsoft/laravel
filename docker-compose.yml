@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: 'laravelapp'
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www/html
+  db:
+    image: mysql:5.7
+    platform: linux/x86_64
+    restart: always
+    ports: 
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: 'laraapp_db'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD: "password"
+    volumes:
+            - "./db:/docker-entrypoint-initdb.d"
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      ports:
+        - 8001:80
+      environment:
+        - PMA_HOST=db
+        - PMA_PORT=3306
